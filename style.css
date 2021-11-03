@@ -1,0 +1,20 @@
+body {
+  font-family: sans-serif;
+  max-width: 900px;
+  margin: auto;
+  background-image: url("https://media.istockphoto.com/vectors/cracked-floor-damage-drawing-vector-id482662463?k=20&m=482662463&s=612x612&w=0&h=VSrqQTgZDw4Tq8VVWziwlz428JDUxLHzqYSf8r0T8aA=");
+   background-position: center;
+  }
+
+h1 {
+   background-color: lightgrey;
+   color: black;
+}
+
+p {
+  background-color: lightgrey;
+  color: black;
+  border-style:solid;
+  padding: 10px;
+  font-size: 20;
+}

@@ -1,0 +1,94 @@
+<html>
+<head>
+			<title>Earthquakes and the Tectonic Plates</title>
+					  <!-- the Leaflet CSS -->
+						<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"/>
+						   <link rel="stylesheet" type="text/css" href="style.css"</link>
+						<!-- the Leaflet JavaScript library -->
+						<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+						<!--JQuery link-->
+						<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+						<script src= "https://cdn.jsdelivr.net/npm/leaflet-legend@1.0.2/leaflet-legend.min.js"></script>
+			<style>
+					#legend {
+							line-height: 0px;
+							background: white;
+							opacity: 0.8;
+							margin: 10px;
+							padding:20px;
+						}
+		</style>
+</head>
+
+		<body>
+						<h1><center>Earthquakes and the Tectonic Plates</center></h1>
+					  <!-- code where we create and name the container that holds the map -->
+
+						<div id="map" style="height: 90%"></div>
+
+						<p>This map depicts all earthquakes of 4.5 or greater that have occurred in the past 30 days and their location in regards to the tectonic plates of Earth.. Data comes from the <a href="https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php">USGS Live Earthquake Feed</a> and is updated every minute. For further details on each earthquake please click the marker. </p>
+							<!-- See https://github.com/fraxen/tectonicplates" for the original data regarding the tectonic plates. Tectonic Plates -->
+							<!--https://github.com/fraxen/tectonicplates/tree/master/GeoJSON -->
+					<p>It should be noted that a large amount of activity of 4.5 magnitude earthquakes or higher occur in the Middle East and Western Pacific Ocean, in regions with many plates connecting together. But like a volcano do you think it is better for plates to release energy more often or are there large scale earthquakes that have yet to occur simply due to growing pressure between fewer plates, such as the Cascadia fault.</a>.</p>
+
+					<div id="legend">
+							<h3><center>Earthquakes and Tectonic Plates</center></h3>
+							<ul style="list-style-type:none">
+								<li>
+									<svg width="24" height="24">
+										<circle cx="12" cy="14" r="4" stroke="blue" stroke-width="10" fill="blue" fill-opacity="2"/>
+									</svg>
+									<text>Tectonic Plates</text>
+								</li>
+								<li>
+									<svg width="24" height="20">
+										<circle cx="12" cy="12" r="8" stroke="red" stroke-width="3" fill="red" fill-opacity="10"/>
+									</svg>
+									<text x="0" y="0)">Greater than 4.5</text>
+								</li>
+							</ul>
+						</div>
+					  <!-- code where we build the map and its functionality -->
+		<script>
+							var mymap = L.map('map').setView([0, 0], 2);
+								L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
+									attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+								})
+							
+								.addTo(mymap);
+
+								// load GeoJSON from an external file and add it to the map
+							$.getJSON("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson",function(data){
+
+								// add GeoJSON layer to the map once the file is loaded
+
+							L.geoJson(data,{
+								pointToLayer: function(feature, latlng){
+					                		var radiusSize,
+									mag = feature.properties.mag;
+					                			if (mag > 4.5) radiusSize = 15;
+					                		var marker = L.circleMarker(latlng, {radius: radiusSize, color: 'red'});
+									marker.bindPopup("Location: " + feature.properties.place + "<br>Magnitude: " + feature.properties.mag + "<br><a href =" + feature.properties.url +">More info</a>");
+									return marker;
+								}
+							}).addTo(mymap);
+					});
+
+
+					$.getJSON("https://raw.githubusercontent.com/fraxen/tectonicplates/339b0c56563c118307b1f4542703047f5f698fae/GeoJSON/PB2002_boundaries.json",function(data){
+					L.geoJson(data)
+
+							.addTo(mymap);
+						});
+
+					 var Legend =  new L.Control.Legend({
+					 position: 'bottomright',
+					 });
+
+					 mymap.addControl(Legend);
+					 $(".legend-container").append( $("#legend") );
+
+
+		  </script>
+</body>
+</html>
